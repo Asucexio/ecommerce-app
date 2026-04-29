@@ -1,5 +1,5 @@
 import { isSupabaseConfigured } from "@/lib/config/env";
-import { listProducts } from "@/lib/repositories/product";
+import { listProducts } from "@/lib/repositories/products";
 
 function toCurrency(priceCents: number, currency: string) {
   return new Intl.NumberFormat("en-US", {

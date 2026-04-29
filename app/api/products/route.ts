@@ -1,5 +1,5 @@
-import { listProducts } from "@/lib/repositories/product";
-import { productListQuerySchema } from "@/lib/validations/product-query";
+import { productListQuerySchema } from "@/lib/validators/product-query";
+import { listProducts } from "@/lib/repositories/products";
 
 export async function GET(request: Request) {
     const rawQuery = Object.fromEntries(new URL(request.url).searchParams.entries());

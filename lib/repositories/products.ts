@@ -1,6 +1,6 @@
-import { createSupabaseServerClient } from "@/lib/supbase/server";
-import type { Product } from "@/lib/types/database.ts";
-import type { ProductListQuery } from "@/lib/validations/product-query";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Product } from "@/lib/types/database";
+import type { ProductListQuery } from "@/lib/validators/product-query";
 
 export async function listProducts(filters: ProductListQuery): Promise<Product[]> {
     const supabase = createSupabaseServerClient();
