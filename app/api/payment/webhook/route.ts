@@ -21,8 +21,8 @@ export async function POST(request: Request) {
 
     try {
         event = stripe.webhooks.constructEvent(payload, signature, stripeWebhookSecret);
-    } catch (error) {
-        return apiError({ code: "VALIDATION_ERROR", message: error instanceof Error ? error.message : "Invalid signature" }, 400);
+    } catch {
+        return apiError({ code: "VALIDATION_ERROR", message: "Invalid stripe-signature header" }, 400);
     }
 
     const admin = createSupabaseAdminClient();

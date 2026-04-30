@@ -3,13 +3,14 @@ import { resolveRequestContext } from "@/lib/auth/request-context";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { apiError, apiSuccess } from "@/lib/shared/http/response";
 
-export async function GET(request: Request, { params }: { params: Promise<{ orderId: string }> }) {
+export async function GET(request: Request, { params }: { params: Promise<{ orderid: string }> }) {
     const context = await resolveRequestContext(request);
     const authError = requireUser(context);
 
     if (authError) return authError;
 
-    const { orderId } = await params;
+    const { orderid } = await params;
+    const orderId = orderid;
     const admin = createSupabaseAdminClient();
 
     const { data: order, error: orderError } = await admin

@@ -10,9 +10,10 @@ async function canAccessItem(itemId: string, userId: string | null, guestToken: 
     return cart.items.some((item) => item.id === itemId);
 }
 
-export async function PATCH(request: Request, { params }: { params: Promise<{ itemId: string }> }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ itemid: string }> }) {
     const context = await resolveRequestContext(request);
-    const { itemId } = await params;
+    const { itemid } = await params;
+    const itemId = itemid;
     const body = await request.json().catch(() => null);
     const parsed = updateCartItemSchema.safeParse(body);
 
@@ -32,9 +33,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ it
     }
 }
 
-export async function DELETE(_request: Request, { params }: { params: Promise<{ itemId: string }> }) {
+export async function DELETE(_request: Request, { params }: { params: Promise<{ itemid: string }> }) {
     const context = await resolveRequestContext(_request);
-    const { itemId } = await params;
+    const { itemid } = await params;
+    const itemId = itemid;
 
     if (!(await canAccessItem(itemId, context.userId, context.guestToken))) {
         return apiError({ code: "FORBIDDEN", message: "Cart item access denied" }, 403);

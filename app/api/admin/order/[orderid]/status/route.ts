@@ -4,20 +4,22 @@ import { updateOrderStatusSchema } from "@/lib/domains/payment/payments.validato
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { apiError, apiSuccess } from "@/lib/shared/http/response";
 
-export async function PATCH(request: Request, { params }: { params: Promise<{ orderId: string }> }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ orderid: string }> }) {
     const context = await resolveRequestContext(request);
     const adminError = requireAdmin(context);
 
     if (adminError) return adminError;
 
-    const body = await request.json().catch(() => null);
+    const rawBody = await request.json().catch(() => ({}));
+    const body = rawBody && typeof rawBody === "object" ? rawBody : {};
     const parsed = updateOrderStatusSchema.safeParse(body);
 
     if (!parsed.success) {
         return apiError({ code: "VALIDATION_ERROR", message: "Invalid payload", details: parsed.error.flatten() }, 400);
     }
 
-    const { orderId } = await params;
+    const { orderid } = await params;
+    const orderId = orderid;
     const admin = createSupabaseAdminClient();
 
     const { data, error } = await admin
