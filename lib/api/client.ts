@@ -25,18 +25,21 @@ type RequestOptions = {
     method?: "GET" | "POST" | "PATCH" | "DELETE";
     body?: unknown;
     token?: string | null;
+    guestToken?: string | null;
     headers?: HeadersInit;
     signal?: AbortSignal;
 };
 
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
-    const { method = "GET", body, token, headers, signal } = options;
+    const { method = "GET", body, token, guestToken, headers, signal } = options;
 
     const response = await fetch(path, {
         method,
         headers: {
             "content-type": "application/json",
             ...(token ? { authorization: `Bearer ${token}` } : {}),
+            // Send guest token so the server can resolve the cart owner for unauthenticated users
+            ...(guestToken ? { "x-guest-token": guestToken } : {}),
             ...headers,
         },
         body: body === undefined ? undefined : JSON.stringify(body),
@@ -47,7 +50,12 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 
     if (!response.ok) {
         const error = json?.error;
-        throw new ApiClientError(response.status, error?.code ?? "HTTP_ERROR", error?.message ?? "Request failed", error?.details);
+        throw new ApiClientError(
+            response.status,
+            error?.code ?? "HTTP_ERROR",
+            error?.message ?? "Request failed",
+            error?.details,
+        );
     }
 
     return (json?.data ?? null) as T;

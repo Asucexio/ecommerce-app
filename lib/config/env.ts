@@ -1,6 +1,11 @@
+// NOTE: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY must be added to your .env.local
+// It is the publishable key from your Stripe dashboard (starts with pk_test_ or pk_live_)
+// This is safe to expose publicly - it's designed to be used in the browser.
+
 const publicEnvVars = [
     "NEXT_PUBLIC_SUPABASE_URL",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
 ] as const;
 
 const serverEnvVars = [
@@ -38,7 +43,9 @@ export function getServerConfig() {
 }
 
 export function isSupabaseConfigured() {
-    return publicEnvVars.every((key) => Boolean(process.env[key]));
+    return ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"].every(
+        (key) => Boolean(process.env[key])
+    );
 }
 
 export function isServerConfigured() {
